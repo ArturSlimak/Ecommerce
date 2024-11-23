@@ -2,12 +2,15 @@ using Asp.Versioning;
 using CatalogService.Extensions;
 using CatalogService.Helpers;
 using CatalogService.Models;
+using CatalogService.Repository;
 using CatalogService.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using Serilog;
 
 
@@ -61,7 +64,23 @@ builder.Services.AddApiVersioning(options =>
 // Add services to the container.
 builder.Services.Configure<CatalogDBSettings>(builder.Configuration.GetSection("MongoDB"));
 
-builder.Services.AddSingleton<ProductsService>();
+
+builder.Services.AddSingleton<IMongoClient>(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<CatalogDBSettings>>().Value;
+    return new MongoClient(settings.ConnectionString);
+});
+
+builder.Services.AddSingleton<IMongoDatabase>(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<CatalogDBSettings>>().Value;
+    var client = sp.GetRequiredService<IMongoClient>();
+    return client.GetDatabase(settings.DatabaseName);
+});
+
+builder.Services.AddSingleton<IProductRepository, ProductRepository>();
+
+builder.Services.AddScoped<ProductsService>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
