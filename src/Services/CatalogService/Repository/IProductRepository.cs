@@ -1,4 +1,4 @@
-﻿using CatalogService.Models;
+﻿using CatalogService.Models.Product;
 using MongoDB.Driver;
 
 namespace CatalogService.Repository;

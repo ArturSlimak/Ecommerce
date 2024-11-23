@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CatalogService.DTOs;
-using CatalogService.Models;
+using CatalogService.Models.Product;
 
 namespace CatalogService.MappingProfiles;
 

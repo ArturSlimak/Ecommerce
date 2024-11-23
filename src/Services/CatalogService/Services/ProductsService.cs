@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CatalogService.DTOs;
 using CatalogService.Helpers;
-using CatalogService.Models;
+using CatalogService.Models.Product;
 using CatalogService.Repository;
 using MongoDB.Driver;
 
@@ -22,7 +22,23 @@ public class ProductsService
     {
         //TODO
         var filter = Builders<Product>.Filter.Empty;
-        var sort = Builders<Product>.Sort.Ascending(p => p.Name);
+        SortField sortField = Enum.TryParse<SortField>(request.SortBy, true, out var parsedSortField)
+                    ? parsedSortField
+                    : SortField.Name;
+
+        var sort = sortField switch
+        {
+            SortField.Name => request.SortDescending
+                ? Builders<Product>.Sort.Descending(p => p.Name)
+                : Builders<Product>.Sort.Ascending(p => p.Name),
+            SortField.Price => request.SortDescending
+                ? Builders<Product>.Sort.Descending(p => p.Price)
+                : Builders<Product>.Sort.Ascending(p => p.Price),
+            _ => request.SortDescending
+                ? Builders<Product>.Sort.Descending(p => p.Name)
+                : Builders<Product>.Sort.Ascending(p => p.Name)
+        };
+
 
         var products = await _productRepository.GetProducts(filter, sort, request.Page, request.PageSize);
         var productDTOs = _mapper.Map<List<ProductDTO.Index>>(products);
