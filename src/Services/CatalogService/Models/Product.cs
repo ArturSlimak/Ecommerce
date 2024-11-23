@@ -7,7 +7,7 @@ public class Product : Entity
 {
 
     [BsonElement("name")]
-    public string ProductName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     [BsonElement("price")]
     public decimal Price { get; set; }
