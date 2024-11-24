@@ -1,5 +1,5 @@
 ﻿using Asp.Versioning;
-using CatalogService.Extensions;
+using CatalogService.Exceptions;
 using CatalogService.Helpers;
 using CatalogService.Services;
 using Microsoft.AspNetCore.Mvc;

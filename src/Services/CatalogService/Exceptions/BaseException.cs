@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace CatalogService.Extensions;
+namespace CatalogService.Exceptions;
 
 public class BaseException : Exception
 {

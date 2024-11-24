@@ -1,5 +1,5 @@
 using Asp.Versioning;
-using CatalogService.Extensions;
+using CatalogService.Exceptions;
 using CatalogService.Helpers;
 using CatalogService.Models;
 using CatalogService.Repository;
@@ -62,11 +62,17 @@ builder.Services.AddApiVersioning(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 
+// Redis
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    var redisSettings = builder.Configuration.GetSection("Redis").Get<RedisSettings>();
+    options.Configuration = redisSettings.Configuration;
+    options.InstanceName = redisSettings.InstanceName;
+});
+
 
 // Add services to the container.
 builder.Services.Configure<CatalogDBSettings>(builder.Configuration.GetSection("MongoDB"));
-
-
 builder.Services.AddSingleton<IMongoClient>(sp =>
 {
     var settings = sp.GetRequiredService<IOptions<CatalogDBSettings>>().Value;

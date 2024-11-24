@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Net;
 
-namespace CatalogService.Extensions;
+namespace CatalogService.Exceptions;
 
 public class ValidationFailException : BaseException
 {
