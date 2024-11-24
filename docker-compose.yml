@@ -1,0 +1,20 @@
+version: "6.0"
+services:
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+
+  redis:
+    image: redis
+    ports:
+      - "27037:6379"
+
+  catalog:
+    build:
+      context: .
+      dockerfile: src/Services/CatalogService/Dockerfile
+    depends_on:
+      - mongo
+    ports:
+      - 27057:80
