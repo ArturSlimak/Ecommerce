@@ -1,5 +1,4 @@
 ﻿using Asp.Versioning;
-using CatalogService.Exceptions;
 using CatalogService.Helpers;
 using CatalogService.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +12,9 @@ public class ProductsController : ControllerBase
 {
 
     private readonly ILogger<ProductsController> _logger;
+    private readonly IProductsService _productsService;
 
-    private readonly ProductsService _productsService;
-
-    public ProductsController(ProductsService productsService, ILogger<ProductsController> logger)
+    public ProductsController(IProductsService productsService, ILogger<ProductsController> logger)
     {
         _productsService = productsService;
         _logger = logger;
@@ -25,8 +23,6 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<ProductResponse.GetIndex> Get([FromQuery] ProductRequest.Index request)
     {
-        if (!ModelState.IsValid)
-            throw new ValidationFailException(ModelState);
         var response = await _productsService.GetAsync(request);
         _logger.LogDebug("Retrieved all products. Products: {@Products}", response.Products);
         return response;
@@ -35,9 +31,6 @@ public class ProductsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] ProductRequest.Create request)
     {
-        if (!ModelState.IsValid)
-            throw new ValidationFailException(ModelState);
-
         var response = await _productsService.CreateAsync(request);
         _logger.LogDebug("Added a new product {@Product}", response);
         return CreatedAtAction(nameof(Get), new { id = response.ProductId });

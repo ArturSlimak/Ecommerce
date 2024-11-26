@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using CatalogService.Exceptions;
+using CatalogService.Extensions;
 using CatalogService.Helpers;
 using CatalogService.Models;
 using CatalogService.Repository;
@@ -25,6 +26,7 @@ builder.Host.UseSerilog((context, services, configuration) =>
 });
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddScoped<ModelValidationAttribute>();
 builder.Services.AddProblemDetails();
 
 
@@ -69,12 +71,13 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 });
 
 builder.Services.AddSingleton<IProductRepository, ProductRepository>();
+builder.Services.AddSingleton<IProductsService, ProductsService>();
 
-builder.Services.AddScoped<ProductsService>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(
+    options => options.Filters.Add<ModelValidationAttribute>())
     .ConfigureApiBehaviorOptions(options =>
     {
         options.SuppressModelStateInvalidFilter = true;
