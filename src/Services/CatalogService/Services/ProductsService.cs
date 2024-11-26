@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace CatalogService.Services;
 
-public class ProductsService
+public class ProductsService : IProductsService
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
