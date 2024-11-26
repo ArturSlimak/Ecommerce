@@ -16,5 +16,17 @@ services:
       dockerfile: src/Services/CatalogService/Dockerfile
     depends_on:
       - mongo
+      - redis
+    ports:
+      - "80"
+
+  ocelotgw:
+    build:
+      context: .
+      dockerfile: src/Gateways/OcelotApiGw/Dockerfile
+    depends_on:
+      - mongo
+      - catalog
+      - redis
     ports:
       - 27057:80
