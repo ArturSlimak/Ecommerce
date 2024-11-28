@@ -21,11 +21,11 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ProductResponse.GetIndex> Get([FromQuery] ProductRequest.Index request)
+    public async Task<ActionResult<ProductResponse.GetIndex>> Get([FromQuery] ProductRequest.Index request)
     {
         var response = await _productsService.GetAsync(request);
         _logger.LogDebug("Retrieved all products. Products: {@Products}", response.Products);
-        return response;
+        return Ok(response);
     }
 
     [HttpPost]
