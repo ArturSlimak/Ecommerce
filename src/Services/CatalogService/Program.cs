@@ -134,7 +134,7 @@ app.UseHealthChecks("/health", new HealthCheckOptions
     Predicate = _ => true,
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
-
+app.UseSerilogRequestLogging();
 
 app.UseExceptionHandler();
 

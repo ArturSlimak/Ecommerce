@@ -1,6 +1,5 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using OcelotApiGw.Middleware;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,13 +55,13 @@ if (app.Environment.IsDevelopment())
 }
 //app.UseRateLimiter();
 
+app.UseSerilogRequestLogging();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
 app.UseOcelot().Wait();
 
