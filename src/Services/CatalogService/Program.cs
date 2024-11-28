@@ -88,35 +88,22 @@ builder.Services.AddControllers(
 
 // Health
 builder.Services.AddHealthChecks()
+    .AddCheck(
+    name: "Self",
+    check: () => HealthCheckResult.Healthy(),
+    tags: new string[] { "catalog_service" }
+    )
     .AddMongoDb(
         mongodbConnectionString: builder.Configuration.GetSection("MongoDB").Get<CatalogDBSettings>().ConnectionString,
         name: "Database",
         failureStatus: HealthStatus.Unhealthy,
-        tags: new string[] { "catalogdb" });
-
-builder.Services.AddHealthChecks().AddRedis(
+        tags: new string[] { "catalogdb" })
+    .AddRedis(
     redisConnectionString: builder.Configuration.GetSection("Redis").Get<RedisSettings>().Configuration,
     name: "Redis",
     failureStatus: HealthStatus.Unhealthy,
     tags: new string[] { "redis", "cach" }
     );
-
-var healthCheckUISection = builder.Configuration.GetSection("HealthChecksUI:Endpoints:CatalogService");
-string healthCheckName = healthCheckUISection.GetValue<string>("Name");
-string healthCheckUrl = healthCheckUISection.GetValue<string>("Url");
-
-
-builder.Services.AddHealthChecksUI(
-    options =>
-    {
-        options.SetEvaluationTimeInSeconds(10);
-        options.SetMinimumSecondsBetweenFailureNotifications(60);
-        options.MaximumHistoryEntriesPerEndpoint(50);
-        options.AddHealthCheckEndpoint(healthCheckName, healthCheckUrl);
-    }
-    ).AddInMemoryStorage();
-
-
 
 
 //Validation
@@ -148,7 +135,6 @@ app.UseHealthChecks("/health", new HealthCheckOptions
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
-app.UseHealthChecksUI(config => config.UIPath = "/health-ui");
 
 app.UseExceptionHandler();
 
