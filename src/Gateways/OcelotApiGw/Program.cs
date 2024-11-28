@@ -1,7 +1,15 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using OcelotApiGw.Middleware;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, services, configuration) =>
+{
+    configuration.ReadFrom.Configuration(context.Configuration);
+    configuration.ReadFrom.Services(services);
+});
 
 var environment = builder.Environment.EnvironmentName;
 
@@ -53,6 +61,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
 app.UseOcelot().Wait();
 
