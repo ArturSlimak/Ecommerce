@@ -1,4 +1,4 @@
-version: "6.0"
+
 services:
   mongo:
     image: mongo
@@ -30,3 +30,12 @@ services:
       - redis
     ports:
       - 27057:80
+
+  monitoring:
+    build:
+      context: .
+      dockerfile: src/Services/MonitoringService/Dockerfile
+    depends_on:
+      - catalog
+    ports:
+      - 27077:80
