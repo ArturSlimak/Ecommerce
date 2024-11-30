@@ -16,14 +16,9 @@ using Serilog;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, services, configuration) =>
-{
-    configuration.ReadFrom.Configuration(context.Configuration);
-    configuration.ReadFrom.Services(services);
-});
+builder.Host.UseSerilog(Logging.Logging.Configure);
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddScoped<ModelValidationAttribute>();
@@ -134,6 +129,7 @@ app.UseHealthChecks("/health", new HealthCheckOptions
     Predicate = _ => true,
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
+
 app.UseSerilogRequestLogging();
 
 app.UseExceptionHandler();

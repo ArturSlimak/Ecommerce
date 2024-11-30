@@ -4,11 +4,7 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, services, configuration) =>
-{
-    configuration.ReadFrom.Configuration(context.Configuration);
-    configuration.ReadFrom.Services(services);
-});
+builder.Host.UseSerilog(Logging.Logging.Configure);
 
 var environment = builder.Environment.EnvironmentName;
 
