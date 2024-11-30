@@ -6,16 +6,16 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-COPY ["src/Services/MonitoringService/MonitoringService.csproj", "."]
-RUN dotnet restore "./MonitoringService.csproj"
-COPY ["src/Services/MonitoringService", "./"]
+COPY ["src/WebApps/HealthCheck/HealthCheck.csproj", "."]
+RUN dotnet restore "./HealthCheck.csproj"
+COPY ["src/WebApps/HealthCheck", "./"]
 WORKDIR "/src/."
-RUN dotnet build "./MonitoringService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./HealthCheck.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./MonitoringService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./HealthCheck.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
@@ -24,4 +24,4 @@ ENV ASPNETCORE_URLS=http://+:80
 EXPOSE 80
 EXPOSE 443
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "MonitoringService.dll"]
+ENTRYPOINT ["dotnet", "HealthCheck.dll"]
