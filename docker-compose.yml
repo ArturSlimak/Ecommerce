@@ -1,41 +1,63 @@
 
 services:
-  mongo:
+  catalogdb:
     image: mongo
+    container_name: catalogdb
+    restart: always
+    volumes:
+       - catalog_mongo_data:/data/db
     ports:
       - 27017:27017
 
   redis:
     image: redis
+    container_name: redis
+    restart: always
     ports:
       - "27037:6379"
 
-  catalog:
+  catalog.api:
+    container_name: catalog.api
     build:
       context: .
       dockerfile: src/Services/CatalogService/Dockerfile
     depends_on:
-      - mongo
+      - catalogdb
       - redis
+    environment:
+      - MongoDB__ConnectionString=mongodb://catalogdb
+      - MongoDB__DatabaseName=catalog_db
+      - MongoDB__Collections__Products=products
+      - MongoDB__Collections__Categories=categories
+      - Redis__Configuration=redis
+      - Redis__InstanceName=CatalogService
     ports:
       - "80"
 
   ocelotgw:
+    container_name: ocelot.gw
     build:
       context: .
       dockerfile: src/Gateways/OcelotApiGw/Dockerfile
     depends_on:
-      - mongo
-      - catalog
+      - catalogdb
+      - catalog.api
       - redis
     ports:
       - 27057:80
 
-  monitoring:
+  healthcheck:
+    container_name: healthcheck 
     build:
       context: .
-      dockerfile: src/Services/MonitoringService/Dockerfile
-    depends_on:
-      - catalog
+      dockerfile: src/WebApps/HealthCheck/Dockerfile
+    environment:
+      - HealthChecksUI__HealthChecks__0__Name=Catalog Service
+      - HealthChecksUI__HealthChecks__0__Uri=http://catalog.api/health
+      - HealthChecksUI__EvaluationTimeOnSeconds=10
+      - HealthChecksUI__MinimumSecondsBetweenFailureNotifications=60
     ports:
       - 27077:80
+
+volumes:
+  catalog_mongo_data:
