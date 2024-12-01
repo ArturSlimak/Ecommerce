@@ -1,5 +1,8 @@
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog(Logging.Logging.Configure);
 // Add services to the container.
 
 builder.Services.AddHealthChecksUI(settings =>
@@ -29,6 +32,7 @@ app.MapHealthChecksUI(options =>
     options.UIPath = "/healthchecks-ui";
     options.ApiPath = "/healthchecks-api";
 });
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 

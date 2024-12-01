@@ -1,21 +1,12 @@
 
+# Volumes for data persistence
+volumes:
+  catalog_mongo_data:
+  elasticsearch-data:
+
+# Services
 services:
-  catalogdb:
-    image: mongo
-    container_name: catalogdb
-    restart: always
-    volumes:
-       - catalog_mongo_data:/data/db
-    ports:
-      - 27017:27017
-
-  redis:
-    image: redis
-    container_name: redis
-    restart: always
-    ports:
-      - "27037:6379"
-
+  # Application Services (APIs)
   catalog.api:
     container_name: catalog.api
     build:
@@ -31,7 +22,7 @@ services:
       - MongoDB__Collections__Categories=categories
       - Redis__Configuration=redis
       - Redis__InstanceName=CatalogService
-      - ElasticConfiguration:Uri=http://elasticsearch
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
     ports:
       - "80"
 
@@ -41,16 +32,16 @@ services:
       context: .
       dockerfile: src/Gateways/OcelotApiGw/Dockerfile
     depends_on:
-      - catalogdb
       - catalog.api
       - redis
+      - catalogdb
     environment:
-      - ElasticConfiguration:Uri=http://elasticsearch
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
     ports:
       - 27057:80
 
   healthcheck:
-    container_name: healthcheck 
+    container_name: healthcheck
     build:
       context: .
       dockerfile: src/WebApps/HealthCheck/Dockerfile
@@ -59,39 +50,48 @@ services:
       - HealthChecksUI__HealthChecks__0__Uri=http://catalog.api/health
       - HealthChecksUI__EvaluationTimeOnSeconds=10
       - HealthChecksUI__MinimumSecondsBetweenFailureNotifications=60
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
     ports:
       - 27077:80
- 
+
+  # Infrastructure Services
+  catalogdb:
+    image: mongo
+    container_name: catalogdb
+    restart: always
+    volumes:
+      - catalog_mongo_data:/data/db
+    ports:
+      - 27017:27017
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    ports:
+      - 27037:6379
+
+  # Logging and Monitoring
   elasticsearch:
     container_name: elasticsearchforlogging
+    restart: always
     image: docker.elastic.co/elasticsearch/elasticsearch:8.16.1
     ports:
       - 27097:9200
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     environment:
-     - xpack.security.enabled=false
-     - discovery.type=single-node
-    networks:
-     - elastic
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+
 
   kibana:
     container_name: kibana
+    restart: always
     image: docker.elastic.co/kibana/kibana:8.16.1
     ports:
-     - 27117:5601
+      - 27117:5601
     depends_on:
-     - elasticsearch
+      - elasticsearch
     environment:
-     - ELASTICSEARCH_URL=http://elasticsearch
-    networks:
-     - elastic
- 
-
-networks:
-  elastic:
-    driver: bridge
-
-volumes:
-  catalog_mongo_data:
-  elasticsearch-data:  
+      - ELASTICSEARCH_URL=http://elasticsearch:9200

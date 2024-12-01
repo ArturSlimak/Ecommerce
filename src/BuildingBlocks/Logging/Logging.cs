@@ -1,4 +1,5 @@
 ﻿
+using Elastic.Ingest.Elasticsearch.DataStreams;
 using Elastic.Serilog.Sinks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -21,7 +22,7 @@ public static class Logging
               .WriteTo.Console(outputTemplate: outputTemplate)
               .WriteTo.Elasticsearch(new[] { new Uri(elasticUri) }, opts =>
               {
-
+                  opts.DataStream = new DataStreamName("logs");
               })
               .ReadFrom.Configuration(context.Configuration);
       };
