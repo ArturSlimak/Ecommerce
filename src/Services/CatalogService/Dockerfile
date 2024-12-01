@@ -6,10 +6,12 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-COPY ["src/Services/CatalogService/CatalogService.csproj", "."]
-RUN dotnet restore "./CatalogService.csproj"
-COPY ["src/Services/CatalogService", "./"]
-WORKDIR "/src/."
+COPY ["src/Services/CatalogService/CatalogService.csproj", "src/Services/CatalogService/"]
+COPY ["src/BuildingBlocks/Logging/Logging.csproj", "src/BuildingBlocks/Logging/"]
+
+RUN dotnet restore "src/Services/CatalogService/CatalogService.csproj"
+COPY . .
+WORKDIR "/src/src/Services/CatalogService/"
 RUN dotnet build "./CatalogService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
