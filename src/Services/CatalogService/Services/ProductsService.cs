@@ -3,7 +3,7 @@ using CatalogService.DTOs;
 using CatalogService.Extensions;
 using CatalogService.Helpers;
 using CatalogService.Models.Product;
-using CatalogService.Repository;
+using CatalogService.Repositories;
 using Microsoft.Extensions.Caching.Distributed;
 using MongoDB.Driver;
 
@@ -76,5 +76,4 @@ public class ProductsService : IProductsService
         await _productRepository.InsertProduct(product);
         return new ProductResponse.Create { ProductId = product.Id };
     }
-
 }

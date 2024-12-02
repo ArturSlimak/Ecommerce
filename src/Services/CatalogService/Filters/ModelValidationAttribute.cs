@@ -1,7 +1,7 @@
 ﻿using CatalogService.Exceptions;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace CatalogService.Extensions;
+namespace CatalogService.Filters;
 
 public class ModelValidationAttribute : ActionFilterAttribute
 {

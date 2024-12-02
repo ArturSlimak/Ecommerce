@@ -1,7 +1,7 @@
 ﻿using CatalogService.Models.Product;
 using MongoDB.Driver;
 
-namespace CatalogService.Repository;
+namespace CatalogService.Repositories;
 
 public interface IProductRepository
 {

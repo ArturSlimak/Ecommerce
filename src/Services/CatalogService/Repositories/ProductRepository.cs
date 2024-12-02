@@ -3,7 +3,8 @@ using CatalogService.Models.Product;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace CatalogService.Repository;
+namespace CatalogService.Repositories;
+
 
 public class ProductRepository : IProductRepository
 {
@@ -28,4 +29,6 @@ public class ProductRepository : IProductRepository
     {
         await _productsCollection.InsertOneAsync(product);
     }
+
+
 }

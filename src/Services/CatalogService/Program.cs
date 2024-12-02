@@ -1,9 +1,9 @@
 using Asp.Versioning;
 using CatalogService.Exceptions;
-using CatalogService.Extensions;
+using CatalogService.Filters;
 using CatalogService.Helpers;
 using CatalogService.Models;
-using CatalogService.Repository;
+using CatalogService.Repositories;
 using CatalogService.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
