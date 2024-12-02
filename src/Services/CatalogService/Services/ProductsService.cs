@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CatalogService.DTOs;
 using CatalogService.Exceptions;
-using CatalogService.Extensions;
 using CatalogService.Helpers;
 using CatalogService.Models.Product;
 using CatalogService.Repositories;
@@ -25,9 +24,6 @@ public class ProductsService : IProductsService
 
     public async Task<ProductResponse.GetIndex> GetAsync(ProductRequest.Index request)
     {
-        var cacheOptions = new DistributedCacheEntryOptions()
-                .SetAbsoluteExpiration(TimeSpan.FromMinutes(20))
-                .SetSlidingExpiration(TimeSpan.FromMinutes(2));
 
         //TODO
         var filter = Builders<Product>.Filter.Empty;
@@ -49,16 +45,7 @@ public class ProductsService : IProductsService
                 : Builders<Product>.Sort.Ascending(p => p.Name)
         };
 
-        var cacheKey = $"products_page_{request.Page}_size_{request.PageSize}";
-
-
-        var products = await _cache.GetOrSetAsync(
-           cacheKey,
-           async () =>
-           {
-               return await _productRepository.GetProductsAsync(filter, sort, request.Page, request.PageSize); ;
-           },
-           cacheOptions)!;
+        var products = await _productRepository.GetProductsAsync(filter, sort, request.Page, request.PageSize);
 
         var productDTOs = _mapper.Map<List<ProductDTO.Index>>(products);
         var pageSize = productDTOs.Count;
