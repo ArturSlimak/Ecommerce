@@ -16,7 +16,7 @@ public class Entity
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     [BsonElement("deleted")]
-    public bool Deleted { get; set; } = false;
+    public bool IsDeleted { get; set; } = false;
 
     [BsonElement("deleted_at")]
     [BsonIgnoreIfNull]

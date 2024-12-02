@@ -19,6 +19,11 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
         switch (exception)
         {
             // Custom
+            case EntityIsAlreadyDeleted e:
+                httpContext.Response.StatusCode = (int)e.StatusCode;
+                problemDetails.Title = "Entity is already deleted";
+                break;
+
             case EntityNotFoundException e:
                 httpContext.Response.StatusCode = (int)e.StatusCode;
                 problemDetails.Title = "Entity not found";

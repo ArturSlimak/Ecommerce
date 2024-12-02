@@ -35,10 +35,19 @@ public class ProductRepository : IProductRepository
         await _productsCollection.InsertOneAsync(product);
     }
 
-    public async Task UpdateProductAsync(Product updatedProduct)
+    public async Task SoftDeleteProductAsync(FilterDefinition<Product> filter, UpdateDefinition<Product> update)
     {
-        await _productsCollection.UpdateOneAsync(p => p.Id == updatedProduct.Id, Builders<Product>.Update
-            .Set(p => p.Name, updatedProduct.Name)
-            .Set(p => p.Price, updatedProduct.Price));
+        await UpdateDocumentAsync(filter, update);
+    }
+
+    public async Task UpdateProductAsync(FilterDefinition<Product> filter, UpdateDefinition<Product> update)
+    {
+        await UpdateDocumentAsync(filter, update);
+    }
+
+    private async Task UpdateDocumentAsync(FilterDefinition<Product> filter, UpdateDefinition<Product> update)
+    {
+        var extendedUpdate = update.Set(p => p.UpdatedAt, DateTime.UtcNow);
+        await _productsCollection.UpdateOneAsync(filter, extendedUpdate);
     }
 }

@@ -86,9 +86,16 @@ public class ProductsService : IProductsService
         {
             throw new EntityNotFoundException($"{nameof(Product)} with id '{id}' not found.");
         }
-        var updatedProduct = _mapper.Map(request.Product, existingProduct);
 
-        await _productRepository.UpdateProductAsync(updatedProduct);
+        var updateDefinition = Builders<Product>.Update
+      .Set(p => p.Name, request.Product.Name)
+      .Set(p => p.Price, request.Product.Price);
+
+        var filter = Builders<Product>.Filter.Eq(p => p.Id, id);
+
+        await _productRepository.UpdateProductAsync(filter, updateDefinition);
+
+        var updatedProduct = await _productRepository.GetProductByIdAsync(id);
 
         var response = new ProductResponse.Mutate
         {
@@ -97,5 +104,26 @@ public class ProductsService : IProductsService
 
         return response;
 
+    }
+
+    public async Task SoftDeleteProductAsync(string id)
+    {
+        var existingProduct = await _productRepository.GetProductByIdAsync(id);
+
+        if (existingProduct == null)
+        {
+            throw new EntityNotFoundException($"{nameof(Product)} with id '{id}' not found.");
+        }
+
+        if (existingProduct.IsDeleted)
+        {
+            throw new EntityIsAlreadyDeleted($"{nameof(Product)} with id '{id}' is already deleted.");
+
+        }
+
+        var filter = Builders<Product>.Filter.Eq(p => p.Id, id);
+        var update = Builders<Product>.Update.Set(p => p.IsDeleted, true).Set(p => p.DeletedAt, DateTime.UtcNow);
+
+        await _productRepository.SoftDeleteProductAsync(filter, update);
     }
 }

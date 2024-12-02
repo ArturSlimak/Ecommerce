@@ -43,5 +43,12 @@ public class ProductsController : ControllerBase
         return Ok(response);
     }
 
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteProduct(string id)
+    {
+        await _productsService.SoftDeleteProductAsync(id);
+        return Ok();
+    }
+
 
 }
