@@ -21,7 +21,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<ProductResponse.GetIndex>> Get([FromQuery] ProductRequest.Index request)
+    public async Task<ActionResult<ProductResponse.GetIndex>> GetProducts([FromQuery] ProductRequest.Index request)
     {
         var response = await _productsService.GetAsync(request);
         _logger.LogDebug("Retrieved all products. Products: {@Products}", response.Products);
@@ -29,11 +29,19 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] ProductRequest.Create request)
+    public async Task<IActionResult> CreateProduct([FromBody] ProductRequest.Create request)
     {
         var response = await _productsService.CreateAsync(request);
         _logger.LogDebug("Added a new product {@Product}", response);
-        return CreatedAtAction(nameof(Get), new { id = response.ProductId });
+        return CreatedAtAction(nameof(GetProducts), new { id = response.ProductId });
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> MutateProduct([FromBody] ProductRequest.Mutate request, string id)
+    {
+        var response = await _productsService.MutateProductAsync(request, id);
+        return Ok(response);
+    }
+
 
 }

@@ -15,4 +15,9 @@ public class ProductResponse
     {
         public string ProductId { get; set; } = null!;
     }
+
+    public class Mutate
+    {
+        public ProductDTO.Index Product { get; set; }
+    }
 }

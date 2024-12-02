@@ -35,7 +35,7 @@ public class ProductRequest
 
     public class Create
     {
-        public required ProductDTO.Mutate Product { get; set; }
+        public required ProductDTO.ToCreate Product { get; set; }
 
         public class Validator : AbstractValidator<Create>
         {
@@ -43,9 +43,26 @@ public class ProductRequest
             {
                 RuleFor(model => model.Product)
                     .NotNull()
-                    .SetValidator(new ProductDTO.Mutate.Validator());
+                    .SetValidator(new ProductDTO.ToCreate.Validator());
             }
         }
 
     }
+
+    public class Mutate
+    {
+        public required ProductDTO.ToMutate Product { get; set; }
+
+        public class Validator : AbstractValidator<Mutate>
+        {
+            public Validator()
+            {
+                RuleFor(model => model.Product)
+                    .NotNull()
+                    .SetValidator(new ProductDTO.ToMutate.Validator());
+            }
+        }
+
+    }
+
 }

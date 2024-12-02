@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CatalogService.DTOs;
+using CatalogService.Exceptions;
 using CatalogService.Extensions;
 using CatalogService.Helpers;
 using CatalogService.Models.Product;
@@ -55,7 +56,7 @@ public class ProductsService : IProductsService
            cacheKey,
            async () =>
            {
-               return await _productRepository.GetProducts(filter, sort, request.Page, request.PageSize); ;
+               return await _productRepository.GetProductsAsync(filter, sort, request.Page, request.PageSize); ;
            },
            cacheOptions)!;
 
@@ -73,7 +74,28 @@ public class ProductsService : IProductsService
     public async Task<ProductResponse.Create> CreateAsync(ProductRequest.Create request)
     {
         var product = _mapper.Map<Product>(request.Product);
-        await _productRepository.InsertProduct(product);
+        await _productRepository.InsertProductAsync(product);
         return new ProductResponse.Create { ProductId = product.Id };
+    }
+
+    public async Task<ProductResponse.Mutate> MutateProductAsync(ProductRequest.Mutate request, string id)
+    {
+        var existingProduct = await _productRepository.GetProductByIdAsync(id);
+
+        if (existingProduct == null)
+        {
+            throw new EntityNotFoundException($"{nameof(Product)} with id '{id}' not found.");
+        }
+        var updatedProduct = _mapper.Map(request.Product, existingProduct);
+
+        await _productRepository.UpdateProductAsync(updatedProduct);
+
+        var response = new ProductResponse.Mutate
+        {
+            Product = _mapper.Map<ProductDTO.Index>(updatedProduct)
+        };
+
+        return response;
+
     }
 }
