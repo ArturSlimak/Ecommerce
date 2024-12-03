@@ -38,8 +38,8 @@ public class ProductsService : IProductsService
                 ? Builders<Product>.Sort.Descending(p => p.Name)
                 : Builders<Product>.Sort.Ascending(p => p.Name),
             SortField.Price => request.SortDescending
-                ? Builders<Product>.Sort.Descending(p => p.Price)
-                : Builders<Product>.Sort.Ascending(p => p.Price),
+                ? Builders<Product>.Sort.Descending(p => p.Description)
+                : Builders<Product>.Sort.Ascending(p => p.Description),
             _ => request.SortDescending
                 ? Builders<Product>.Sort.Descending(p => p.Name)
                 : Builders<Product>.Sort.Ascending(p => p.Name)
@@ -76,7 +76,7 @@ public class ProductsService : IProductsService
 
         var updateDefinition = Builders<Product>.Update
       .Set(p => p.Name, request.Product.Name)
-      .Set(p => p.Price, request.Product.Price);
+      .Set(p => p.Description, request.Product.Description);
 
         var filter = Builders<Product>.Filter.Eq(p => p.Id, id);
 

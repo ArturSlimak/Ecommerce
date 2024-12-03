@@ -9,6 +9,6 @@ public class Product : Entity
     [BsonElement("name")]
     public string Name { get; set; } = null!;
 
-    [BsonElement("price")]
-    public decimal Price { get; set; }
+    [BsonElement("description")]
+    public string Description { get; set; } = null!;
 }

@@ -9,7 +9,7 @@ public class ProductDTO
     {
         public string? Id { get; set; }
         public string Name { get; set; } = null!;
-        public decimal Price { get; set; }
+        public string Description { get; set; } = null!;
 
     }
 
@@ -17,14 +17,14 @@ public class ProductDTO
     {
 
         public string? Name { get; set; }
-        public decimal Price { get; set; }
+        public string? Description { get; set; }
 
         public class Validator : AbstractValidator<ToCreate>
         {
             public Validator()
             {
                 RuleFor(model => model.Name).NotEmpty();
-                RuleFor(model => model.Price).GreaterThan(5);
+                RuleFor(model => model.Description).NotEmpty();
             }
         }
     }
@@ -33,14 +33,14 @@ public class ProductDTO
     {
 
         public string? Name { get; set; }
-        public decimal Price { get; set; }
+        public string? Description { get; set; }
 
         public class Validator : AbstractValidator<ToMutate>
         {
             public Validator()
             {
                 RuleFor(model => model.Name).NotEmpty();
-                RuleFor(model => model.Price).GreaterThan(5);
+                RuleFor(model => model.Description).NotEmpty();
             }
         }
     }

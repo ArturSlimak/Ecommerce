@@ -29,8 +29,8 @@ public class ProductsControllerTests
         {
             Products = new List<ProductDTO.Index>
         {
-            new ProductDTO.Index { Id = "1", Name = "Product1", Price = 100 },
-            new ProductDTO.Index { Id = "2", Name = "Product2", Price = 200 }
+            new ProductDTO.Index { Id = "1", Name = "Product1", Description = 100 },
+            new ProductDTO.Index { Id = "2", Name = "Product2", Description = 200 }
         }
         };
 
