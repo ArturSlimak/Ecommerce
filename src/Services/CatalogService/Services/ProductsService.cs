@@ -4,7 +4,6 @@ using CatalogService.Exceptions;
 using CatalogService.Helpers;
 using CatalogService.Models.Product;
 using CatalogService.Repositories;
-using Microsoft.Extensions.Caching.Distributed;
 using MongoDB.Driver;
 
 namespace CatalogService.Services;
@@ -13,12 +12,11 @@ public class ProductsService : IProductsService
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
-    private readonly IDistributedCache _cache;
 
-    public ProductsService(IProductRepository productRepository, IMapper mapper, IDistributedCache cache)
+
+    public ProductsService(IProductRepository productRepository, IMapper mapper)
     {
         _productRepository = productRepository;
-        _cache = cache;
         _mapper = mapper;
     }
 

@@ -18,14 +18,20 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ------------------------------------
+// Logging
+// ------------------------------------
 builder.Host.UseSerilog(Logging.Logging.Configure);
 
+// ------------------------------------
+// Global Exception Handling
+// ------------------------------------
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddScoped<ModelValidationAttribute>();
 builder.Services.AddProblemDetails();
 
-
-// Versioning
+// ------------------------------------
+// API Versioning
+// ------------------------------------
 builder.Services.AddApiVersioning(options =>
 {
     options.DefaultApiVersion = new ApiVersion(1);
@@ -41,23 +47,15 @@ builder.Services.AddApiVersioning(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 
-// Redis
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    var redisSettings = builder.Configuration.GetSection("Redis").Get<RedisSettings>();
-    options.Configuration = redisSettings.Configuration;
-    options.InstanceName = redisSettings.InstanceName;
-});
-
-
-// Add services to the container.
+// ------------------------------------
+// MongoDB Configuration
+// ------------------------------------
 builder.Services.Configure<CatalogDBSettings>(builder.Configuration.GetSection("MongoDB"));
 builder.Services.AddSingleton<IMongoClient>(sp =>
 {
     var settings = sp.GetRequiredService<IOptions<CatalogDBSettings>>().Value;
     return new MongoClient(settings.ConnectionString);
 });
-
 builder.Services.AddSingleton<IMongoDatabase>(sp =>
 {
     var settings = sp.GetRequiredService<IOptions<CatalogDBSettings>>().Value;
@@ -65,59 +63,70 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
     return client.GetDatabase(settings.DatabaseName);
 });
 
+// ------------------------------------
+// Repositories and Services
+// ------------------------------------
 builder.Services.AddSingleton<IProductRepository, ProductRepository>();
 builder.Services.AddSingleton<IProductsService, ProductsService>();
 
-
+// ------------------------------------
+// AutoMapper
+// ------------------------------------
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddControllers(
-    options => options.Filters.Add<ModelValidationAttribute>())
-    .ConfigureApiBehaviorOptions(options =>
-    {
-        options.SuppressModelStateInvalidFilter = true;
-    }).AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
-    });
+// ------------------------------------
+// MVC and Model Validation
+// ------------------------------------
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ModelValidationAttribute>();
+})
+.ConfigureApiBehaviorOptions(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+})
+.AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+});
 
-// Health
+// ------------------------------------
+// Health Checks
+// ------------------------------------
 builder.Services.AddHealthChecks()
     .AddCheck(
-    name: "Self",
-    check: () => HealthCheckResult.Healthy(),
-    tags: new string[] { "catalog_service" }
+        name: "Self",
+        check: () => HealthCheckResult.Healthy(),
+        tags: new[] { "catalog_service" }
     )
     .AddMongoDb(
         mongodbConnectionString: builder.Configuration.GetSection("MongoDB").Get<CatalogDBSettings>().ConnectionString,
         name: "Database",
         failureStatus: HealthStatus.Unhealthy,
-        tags: new string[] { "catalogdb" })
-    .AddRedis(
-    redisConnectionString: builder.Configuration.GetSection("Redis").Get<RedisSettings>().Configuration,
-    name: "Redis",
-    failureStatus: HealthStatus.Unhealthy,
-    tags: new string[] { "redis", "cach" }
+        tags: new[] { "catalogdb" }
     );
 
-
-//Validation
+// ------------------------------------
+// Validation
+// ------------------------------------
 builder.Services.AddValidatorsFromAssemblyContaining<ProductRequest.Create.Validator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ProductRequest.Index.Validator>();
-
 builder.Services.AddFluentValidationAutoValidation();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// ------------------------------------
+// Swagger
+// ------------------------------------
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-
-
+// ------------------------------------
+// Build Application
+// ------------------------------------
 var app = builder.Build();
 
-
-// Configure the HTTP request pipeline.
+// ------------------------------------
+// Middleware Pipeline
+// ------------------------------------
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -131,15 +140,12 @@ app.UseHealthChecks("/health", new HealthCheckOptions
 });
 
 app.UseSerilogRequestLogging();
-
 app.UseExceptionHandler();
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
+// ------------------------------------
+// Run Application
+// ------------------------------------
 app.Run();
-
-
