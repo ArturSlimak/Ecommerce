@@ -15,9 +15,9 @@ public class ProductRepository : IProductRepository
         _productsCollection = database.GetCollection<Product>(catalogDBSettings.Value.Collections.Products);
     }
 
-    public async Task<Product> GetProductByIdAsync(string id)
+    public async Task<Product> GetProductByIdAsync(string publicId)
     {
-        return await _productsCollection.Find(p => p.Id == id).FirstOrDefaultAsync();
+        return await _productsCollection.Find(p => p.PublicId == publicId).FirstOrDefaultAsync();
     }
 
     public async Task<IList<Product>> GetProductsAsync(FilterDefinition<Product> filter, SortDefinition<Product> sort, int page, int pageSize)

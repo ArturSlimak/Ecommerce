@@ -9,6 +9,9 @@ public class Entity
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
 
+    [BsonElement("public_id")]
+    public string PublicId { get; set; } = Guid.NewGuid().ToString();
+
     [BsonElement("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

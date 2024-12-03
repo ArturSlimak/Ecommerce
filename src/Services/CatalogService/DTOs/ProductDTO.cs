@@ -7,7 +7,7 @@ public class ProductDTO
 
     public class Index
     {
-        public string? Id { get; set; }
+        public string? PublicId { get; set; }
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
 
