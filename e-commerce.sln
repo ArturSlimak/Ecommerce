@@ -33,11 +33,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HealthCheck", "HealthCheck"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{EF1FF322-36D7-4D4C-8DC4-A62C223BB3AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "src\BuildingBlocks\Logging\Logging.csproj", "{5F202263-52F6-4DE4-A0B4-16BD0182D605}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "src\BuildingBlocks\Logging\Logging.csproj", "{5F202263-52F6-4DE4-A0B4-16BD0182D605}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logging", "Logging", "{0E7D4A30-92E6-4439-9BF3-A120726B3EBC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventBus", "EventBus", "{40EE0F28-26EF-4A55-83F0-2FBA4AB4C8D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryService", "src\Services\InventoryService\InventoryService.csproj", "{5E5FAE80-48AE-49EA-A498-7F109D9E6AA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,10 @@ Global
 		{5F202263-52F6-4DE4-A0B4-16BD0182D605}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F202263-52F6-4DE4-A0B4-16BD0182D605}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F202263-52F6-4DE4-A0B4-16BD0182D605}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E5FAE80-48AE-49EA-A498-7F109D9E6AA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E5FAE80-48AE-49EA-A498-7F109D9E6AA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E5FAE80-48AE-49EA-A498-7F109D9E6AA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E5FAE80-48AE-49EA-A498-7F109D9E6AA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +88,7 @@ Global
 		{5F202263-52F6-4DE4-A0B4-16BD0182D605} = {0E7D4A30-92E6-4439-9BF3-A120726B3EBC}
 		{0E7D4A30-92E6-4439-9BF3-A120726B3EBC} = {EF1FF322-36D7-4D4C-8DC4-A62C223BB3AC}
 		{40EE0F28-26EF-4A55-83F0-2FBA4AB4C8D8} = {EF1FF322-36D7-4D4C-8DC4-A62C223BB3AC}
+		{5E5FAE80-48AE-49EA-A498-7F109D9E6AA3} = {92CFD4E3-2248-4D70-BEC9-8A733E7022D0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E15D6468-A0FB-4E14-A9C3-37AF1451D341}

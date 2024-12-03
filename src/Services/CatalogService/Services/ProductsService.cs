@@ -24,7 +24,7 @@ public class ProductsService : IProductsService
     {
 
         //TODO
-        var filter = Builders<Product>.Filter.Empty;
+        var filter = Builders<Product>.Filter.Where(p => !p.IsDeleted);
 
         SortField sortField = Enum.TryParse<SortField>(request.SortBy, true, out var parsedSortField)
                     ? parsedSortField

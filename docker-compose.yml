@@ -20,8 +20,6 @@ services:
       - MongoDB__DatabaseName=catalog_db
       - MongoDB__Collections__Products=products
       - MongoDB__Collections__Categories=categories
-      - Redis__Configuration=redis
-      - Redis__InstanceName=CatalogService
       - "ElasticConfiguration:Uri=http://elasticsearch:9200"
     ports:
       - "80"
@@ -70,6 +68,17 @@ services:
     restart: always
     ports:
       - 27037:6379
+ 
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    image: rabbitmq:4.0.4-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+    ports:
+      - "27137:5672"
+      - "27157:15672"
 
   # Logging and Monitoring
   elasticsearch:
