@@ -28,27 +28,6 @@ public class ProductsController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateProduct([FromBody] ProductRequest.Create request)
-    {
-        var response = await _productsService.CreateAsync(request);
-        _logger.LogDebug("Added a new product {@Product}", response);
-        return CreatedAtAction(nameof(GetProducts), new { id = response.ProductId });
-    }
-
-    [HttpPut("{id}")]
-    public async Task<IActionResult> MutateProduct([FromBody] ProductRequest.Mutate request, string id)
-    {
-        var response = await _productsService.MutateProductAsync(request, id);
-        return Ok(response);
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteProduct(string id)
-    {
-        await _productsService.SoftDeleteProductAsync(id);
-        return Ok();
-    }
 
 
 }
