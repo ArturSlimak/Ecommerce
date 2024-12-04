@@ -63,7 +63,7 @@ public class ProductsService : IProductsService
         return new ProductResponse.Create { ProductId = product.PublicId };
     }
 
-    public async Task<ProductResponse.Mutate> MutateProductAsync(ProductRequest.Mutate request, string publicId)
+    public async Task<ProductResponse.Mutate> MutateAsync(ProductRequest.Mutate request, string publicId)
     {
         var existingProduct = await _productRepository.GetProductByIdAsync(publicId);
 
