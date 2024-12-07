@@ -26,6 +26,8 @@ public class ProductDTO
 
         public string? Name { get; set; }
         public string? Description { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
 
         public class Validator : AbstractValidator<ToCreate>
         {
@@ -33,6 +35,8 @@ public class ProductDTO
             {
                 RuleFor(model => model.Name).NotEmpty();
                 RuleFor(model => model.Description).NotEmpty();
+                RuleFor(model => model.Price).GreaterThanOrEqualTo(0);
+                RuleFor(model => model.Quantity).GreaterThanOrEqualTo(0);
             }
         }
     }
@@ -42,6 +46,8 @@ public class ProductDTO
 
         public string? Name { get; set; }
         public string? Description { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
 
         public class Validator : AbstractValidator<ToMutate>
         {
@@ -49,6 +55,8 @@ public class ProductDTO
             {
                 RuleFor(model => model.Name).NotEmpty();
                 RuleFor(model => model.Description).NotEmpty();
+                RuleFor(model => model.Price).GreaterThanOrEqualTo(0);
+                RuleFor(model => model.Quantity).GreaterThanOrEqualTo(0);
             }
         }
     }
