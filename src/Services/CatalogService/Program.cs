@@ -8,7 +8,6 @@ using CatalogService.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
-using MassTransit;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
@@ -78,7 +77,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 // ------------------------------------
 // RabbitMQ
 // ------------------------------------
-builder.Services.AddMassTransit();
+
 
 // ------------------------------------
 // MVC and Model Validation
@@ -117,6 +116,8 @@ builder.Services.AddHealthChecks()
 // ------------------------------------
 builder.Services.AddValidatorsFromAssemblyContaining<ProductRequest.Create.Validator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ProductRequest.Index.Validator>();
+builder.Services.AddValidatorsFromAssemblyContaining<ProductRequest.Mutate.Validator>();
+
 builder.Services.AddFluentValidationAutoValidation();
 
 // ------------------------------------

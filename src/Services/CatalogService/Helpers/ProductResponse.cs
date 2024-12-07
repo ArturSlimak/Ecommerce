@@ -10,14 +10,20 @@ public class ProductResponse
         public int Page { get; set; }
         public int PageSize { get; set; }
     }
+    public class GetDetails
+    {
+        public ProductDTO.Details Product { get; set; } = new();
+
+    }
 
     public class Create
     {
-        public string ProductId { get; set; } = null!;
+        public string PublicId { get; set; } = null!;
     }
 
     public class Mutate
     {
-        public ProductDTO.Index Product { get; set; }
+        public ProductDTO.Index Product { get; set; } = null!;
     }
+
 }

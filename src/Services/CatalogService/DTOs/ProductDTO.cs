@@ -7,10 +7,18 @@ public class ProductDTO
 
     public class Index
     {
-        public string? PublicId { get; set; }
+        public string PublicId { get; set; } = null!;
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
 
+    }
+    public class Details
+    {
+        public string PublicId { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string Description { get; set; } = null!;
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
     }
 
     public class ToCreate
@@ -44,4 +52,5 @@ public class ProductDTO
             }
         }
     }
+
 }

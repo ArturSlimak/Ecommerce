@@ -60,7 +60,7 @@ public class ProductsService : IProductsService
     {
         var product = _mapper.Map<Product>(request.Product);
         await _productRepository.InsertProductAsync(product);
-        return new ProductResponse.Create { ProductId = product.PublicId };
+        return new ProductResponse.Create { PublicId = product.PublicId };
     }
 
     public async Task<ProductResponse.Mutate> MutateAsync(ProductRequest.Mutate request, string publicId)
@@ -107,4 +107,15 @@ public class ProductsService : IProductsService
         await _productRepository.SoftDeleteProductAsync(filter, update);
     }
 
+    public async Task<ProductResponse.GetDetails> GetByIdAsync(string publicId)
+    {
+
+        var product = await _productRepository.GetProductByIdAsync(publicId);
+        var productDTOs = _mapper.Map<ProductDTO.Details>(product);
+
+        return new ProductResponse.GetDetails
+        {
+            Product = productDTOs,
+        };
+    }
 }

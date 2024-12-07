@@ -11,4 +11,11 @@ public class Product : Entity
 
     [BsonElement("description")]
     public string Description { get; set; } = null!;
+
+    [BsonElement("price")]
+    public decimal Price { get; set; }
+
+    [BsonElement("quantity")]
+    public int Quantity { get; set; }
+
 }

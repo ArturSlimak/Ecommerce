@@ -8,4 +8,5 @@ public interface IProductsService
     Task<ProductResponse.Create> CreateAsync(ProductRequest.Create request);
     Task<ProductResponse.Mutate> MutateAsync(ProductRequest.Mutate request, string publicId);
     Task SoftDeleteProductAsync(string publicId);
+    Task<ProductResponse.GetDetails> GetByIdAsync(string publicid);
 }

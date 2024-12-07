@@ -28,12 +28,20 @@ public class ProductsController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ProductResponse.GetDetails>> GetProductById(string id)
+    {
+        var response = await _productsService.GetByIdAsync(id);
+        _logger.LogDebug("Retrieved product with publicId {@Id}. Product: {@Product}", id, response);
+        return Ok(response);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateProduct([FromBody] ProductRequest.Create request)
     {
         var response = await _productsService.CreateAsync(request);
         _logger.LogDebug("Added a new product {@Product}", response);
-        return CreatedAtAction(nameof(GetProducts), new { id = response.ProductId });
+        return CreatedAtAction(nameof(GetProducts), new { id = response.PublicId });
     }
 
     [HttpPut("{id}")]
