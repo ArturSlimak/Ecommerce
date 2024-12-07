@@ -29,14 +29,14 @@ public class ProductsControllerTests
         {
             Products = new List<ProductDTO.Index>
         {
-            new ProductDTO.Index { PublicId = "1", Name = "Product1", Description = 100 },
-            new ProductDTO.Index { PublicId = "2", Name = "Product2", Description = 200 }
+            new ProductDTO.Index { PublicId = "1", Name = "Product1", Description = "100" },
+            new ProductDTO.Index { PublicId = "2", Name = "Product2", Description = "200" }
         }
         };
 
         _mockProductsService.Setup(service => service.GetAsync(request)).ReturnsAsync(productResponse);
 
-        var actionResult = await _controller.Get(request);
+        var actionResult = await _controller.GetProducts(request);
 
         var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
         var response = Assert.IsType<ProductResponse.GetIndex>(okResult.Value);

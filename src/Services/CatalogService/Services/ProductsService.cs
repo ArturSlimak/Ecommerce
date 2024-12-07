@@ -24,7 +24,7 @@ public class ProductsService : IProductsService
     {
 
         //TODO
-        var filter = Builders<Product>.Filter.Empty;
+        var filter = Builders<Product>.Filter.Where(p => !p.IsDeleted);
 
         SortField sortField = Enum.TryParse<SortField>(request.SortBy, true, out var parsedSortField)
                     ? parsedSortField
@@ -89,6 +89,22 @@ public class ProductsService : IProductsService
 
         return response;
 
+    }
+
+    public async Task SoftDeleteProductAsync(string publicId)
+    {
+        var existingProduct = await _productRepository.GetProductByIdAsync(publicId);
+        if (existingProduct == null)
+        {
+            throw new EntityNotFoundException($"{nameof(Product)} with id '{publicId}' not found.");
+        }
+        if (existingProduct.IsDeleted)
+        {
+            throw new EntityIsAlreadyDeleted($"{nameof(Product)} with id '{publicId}' is already deleted.");
+        }
+        var filter = Builders<Product>.Filter.Eq(p => p.PublicId, publicId);
+        var update = Builders<Product>.Update.Set(p => p.IsDeleted, true).Set(p => p.DeletedAt, DateTime.UtcNow);
+        await _productRepository.SoftDeleteProductAsync(filter, update);
     }
 
 }

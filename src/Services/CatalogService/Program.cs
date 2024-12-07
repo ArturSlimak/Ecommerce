@@ -8,6 +8,7 @@ using CatalogService.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
+using MassTransit;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
@@ -73,6 +74,11 @@ builder.Services.AddSingleton<IProductsService, ProductsService>();
 // AutoMapper
 // ------------------------------------
 builder.Services.AddAutoMapper(typeof(Program));
+
+// ------------------------------------
+// RabbitMQ
+// ------------------------------------
+builder.Services.AddMassTransit();
 
 // ------------------------------------
 // MVC and Model Validation

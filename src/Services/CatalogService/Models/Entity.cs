@@ -17,4 +17,10 @@ public class Entity
 
     [BsonElement("updated_at")]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    [BsonElement("deleted")]
+    public bool IsDeleted { get; set; } = false;
+    [BsonElement("deleted_at")]
+    [BsonIgnoreIfNull]
+    public DateTime? DeletedAt { get; set; }
 }
